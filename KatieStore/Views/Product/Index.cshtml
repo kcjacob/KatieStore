@@ -1,0 +1,61 @@
+﻿@model KatieStore.Models.Product
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<!--@if (ViewBag.LoadTime != null)
+{
+    <div class="alert alert-info">
+        <p>
+            @ViewBag.LoadTime
+        </p>
+    </div>
+}
+-->
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+<div class="cart">
+    <div class="cart-content" style="background: white;">
+    <div class="cart-header">
+        <h3 style="color:white;">@Model.Name</h3>
+    </div>
+        <div class="cart-body">
+           <img class="img-responsive" src="@Model.ProductImages.First().URL" alt="@Model.ProductImages.First().AlternateText" style="max-width: 100px; float: left;"/>
+            <span class="pull-right">@((Model.Price ?? 0m).ToString("c"))</span>
+
+            <p></p>
+            @using (Html.BeginForm())
+            {
+                @*
+                using hidden form fields makes these properties part of the
+                POST payload.  ASP.Net MVC will automatically map these to
+                the ProductModel parameter if I declare these correctly.
+                *@
+                @Html.HiddenFor(x => x.ID)
+                @Html.HiddenFor(x => x.Name)
+
+                @Html.HiddenFor(x => x.Price)
+                <div class="form-group">
+                    <label for="quantity" class="control-label">Quantity</label>
+                    <select name="quantity" required class="form-control">
+                        <option></option>
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                </div>
+                <input type="submit" value="Add To Cart" class="btn btn-primary" />
+            }
+        </div>
+    </div>
+    </div>

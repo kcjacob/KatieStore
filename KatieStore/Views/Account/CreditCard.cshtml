@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Braintree.CreditCard>
+@{
+    ViewBag.Title = "CreditCards";
+}
+
+<h2>Saved Credit Card</h2>
+<table class="table table-striped">
+    @foreach (var creditCard in Model)
+    {
+        <tr>
+            <td>@creditCard.LastFour</td>
+            <td>@creditCard.ExpirationMonth / @creditCard.ExpirationYear</td>
+            <td>
+                <img class="img-responsive" src="@creditCard.ImageUrl" />
+            </td>
+            <td>@creditCard.CardholderName</td>
+            <td>@Html.ActionLink("Delete Card", "CreditCardDelete", new { id = creditCard.UniqueNumberIdentifier }, new { @class = "btn btn-danger" })</td>
+        </tr>
+    }
+</table>

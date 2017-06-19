@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a9f7270610da4838bf883cf82ccb64bf" Name="Diagram1">
+        <EntityTypeShape EntityType="KatieStoreModel.Account" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Address" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.AspNetRole" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.AspNetUser" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Basket" Width="1.5" PointX="5.25" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.BasketProduct" Width="1.5" PointX="7.5" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Category" Width="1.5" PointX="3.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Product" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.ProductImage" Width="1.5" PointX="8.25" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Purchase" Width="1.5" PointX="5.25" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.PurchaseProduct" Width="1.5" PointX="7.5" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Review" Width="1.5" PointX="8.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.Shipment" Width="1.5" PointX="5.25" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="KatieStoreModel.User" Width="1.5" PointX="9.75" PointY="9.625" IsExpanded="true" />
+        <AssociationConnector Association="KatieStoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Basket_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Purchase_AspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Review_User" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_BasketProduct_Basket" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_BasketProduct_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Category_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_ProductImage_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_PurchaseProduct_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Review_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_PurchaseProduct_Purchase" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_PurchaseProduct_Shipment" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.FK_Review_Review" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.AddressAspNetUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.AspNetUserRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="KatieStoreModel.CategoryProduct" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

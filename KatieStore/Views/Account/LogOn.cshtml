@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "LogOn";
+}
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+
+<!-- The LOG IN Modal -->
+<div class="cart">
+
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+            <div>
+
+                <div class="cart-content">
+                    <div class="cart-header">
+                        <h2>Log On</h2>
+                    </div>
+                    <div class="cart-body">
+           
+
+                        @using (Html.BeginForm())
+            {
+                            @Html.AntiForgeryToken()
+                            if (TempData["Confirmed"] != null)
+                            {
+                                <div class="alert alert-success">
+                                    <p>Your account is confirmed, please log in to continue</p>
+
+                                </div>
+                            }
+                            if (TempData["Reset"] != null)
+                            {
+                                <div class="alert alert-success">
+                                    <p>Your password has been reset, please log in to continue</p>
+
+                                </div>
+                            }
+                            if (ViewBag.Error != null)
+                            {
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach (string error in (IEnumerable<string>)ViewBag.Error)
+                                        {
+                                            <li>@error</li>
+                                        }
+                                    </ul>
+
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label for="username" class="control-label">Username</label>
+                                <input name="username" placeholder="username" type="text" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label">Password</label>
+                                <input name="password" placeholder="password" type="password" class="form-control" required />
+                            </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <input type="submit" class="btn btn-primary" value="Log On" />
+                                    </div>
+                                    <div class="forgotbtn">
+                                        @Html.ActionLink("Forgot Password", "ForgotPassword", "Account", new { area = "" }, new { @class = "btn btn-default" })
+
+
+                                    </div>
+
+                                </div>
+                        }
+
+                       
+                    </div>
+                    <hr />
+         
+        <div class="cart-footer">
+            
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End of LOG IN Modal content-->

@@ -1,0 +1,83 @@
+﻿@model KatieStore.Models.Basket
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+
+<!-- The LOG IN Modal -->
+<div class="cart">
+
+            @if (Model.BasketProducts.Count() == 0)
+            {
+                <div class="cart-content">
+                    <div class="cart-header">
+                        <h2>Shopping Cart</h2>
+                    </div>
+                    <div class="cart-body">
+                        <p>Your cart is currently empty</p>
+                        @Html.ActionLink("Go Shopping", "Index", "Category", null, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                using (Html.BeginForm("Index", "Cart", FormMethod.Post, new { @class = "cart-form" }))
+                {
+
+                    <table class="table table-hover" style="background-color:white;">
+                        <thead>
+                            <tr class="cart-header" style="font-size: 20px;">
+                                <th></th>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.BasketProducts.Count(); i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        @if (Model.BasketProducts.ElementAt(i).Product.ProductImages.Any())
+                                    {
+                                        <img src="@Model.BasketProducts.ElementAt(i).Product.ProductImages.First().URL" alt="" style="max-width: 100px;" />
+                                    }
+                                </td>
+
+                                    <td>@Model.BasketProducts.ElementAt(i).Product.Name</td>
+                                   <td>@((Model.BasketProducts.ElementAt(i).Product.Price ?? 0).ToString("c"))</td>
+                                    <td>
+                                        <input class="form-control" name="BasketProducts[@i].Quantity" type="number" value="@Model.BasketProducts.ElementAt(i).Quantity" />
+                                        <input type="hidden" name="BasketProducts[@i].ProductID" value="@Model.BasketProducts.ElementAt(i).ProductID" />
+                                    </td>
+
+                                    @* the above line will render out <input type="text" name="model[0].quantity" class="form-control" />*@
+                                    <td>
+                                        @(((Model.BasketProducts.ElementAt(i).Product.Price ?? 0) * Model.BasketProducts.ElementAt(i).Quantity).ToString("c"))
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">Total</td>
+                                <td>@Model.BasketProducts.Sum(x => (x.Product.Price ?? 0) * x.Quantity).ToString("c")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <input type="submit" value="Update Cart" class="btn btn-default" />
+                    @Html.ActionLink("Checkout", "Index", "Checkout", null, new { @class = "btn btn-primary" })
+                }
+            }
+
+
+
+    </div>
+    <!-- End of LOG IN Modal content-->

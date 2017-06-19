@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Index";
+    var braintreeCustomer = (Braintree.Customer)ViewBag.Customer;
+}
+@if (TempData["PasswordChanged"] != null)
+{
+    <div class="alert alert-success">
+        <p>Your password has been updated</p>
+
+    </div>
+}
+
+<h2>Logged on as @User.Identity.Name</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@braintreeCustomer.Id" />
+    <div class="form-group">
+        <label for="firstName" class="control-label">First Name</label>
+        <input name="firstName" placeholder="first name" type="text" class="form-control" value="@braintreeCustomer.FirstName" required />
+    </div>
+    <div class="form-group">
+        <label for="lastName" class="control-label">Last Name</label>
+        <input name="lastName" placeholder="last name" type="text" class="form-control" value="@braintreeCustomer.LastName" required />
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber" class="control-label">Phone</label>
+        <input name="phoneNumber" placeholder="phone" type="tel" class="form-control" value="@braintreeCustomer.Phone" required />
+    </div>
+                <input type="submit" value="Update Information" class="btn btn-primary" />
+}
+@Html.ActionLink("View Saved Credit Cards", "CreditCard", null, new { @class = "btn" })
+@Html.ActionLink("Change Password", "ChangePassword", null, new { @class = "btn" })ange Password", "ChangePassword")

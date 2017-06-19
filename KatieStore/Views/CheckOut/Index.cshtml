@@ -1,0 +1,422 @@
+﻿@model KatieStore.Models.CheckoutModel
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> months = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        months.Add(new SelectListItem { Text = i.ToString().PadLeft(2, '0'), Value = i.ToString().PadLeft(2, '0') });
+    }
+
+    List<SelectListItem> years = new List<SelectListItem>();
+    for (int i = DateTime.Now.Year; i <= DateTime.Now.AddYears(6).Year; i++)
+    {
+        years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+    }
+
+}
+<div class="row">
+    <div class="col-xs-12"></div>
+    <h2>Checkout</h2>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><p>Order Summary</p></div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Basket.BasketProducts.Count(); i++)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@Model.Basket.BasketProducts.ElementAt(i).Product.Name</td>
+                                <td>@Model.Basket.BasketProducts.ElementAt(i).Product.Description</td>
+                                <td>@((Model.Basket.BasketProducts.ElementAt(i).Product.Price ?? 0).ToString("c"))</td>
+                                <td>@Model.Basket.BasketProducts.ElementAt(i).Quantity</td>
+                                <td>
+                                    @(((Model.Basket.BasketProducts.ElementAt(i).Product.Price ?? 0) * Model.Basket.BasketProducts.ElementAt(i).Quantity).ToString("c"))
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">Total</td>
+                            <td>@Model.Basket.BasketProducts.Sum(x => (x.Product.Price ?? 0) * x.Quantity).ToString("c")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-xs-12">
+            @*Anti-forgery token creates a hidden input on my form that has a bunch of hashed information embedded within it
+                The hashed data includes browser heuristics such as IP address, browser version
+            *@
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.CustomerId)
+            @if (!this.ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>Contact Information</p>
+                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.HiddenFor(x => x.FirstName)
+                    @Html.HiddenFor(x => x.LastName)
+                    @Html.HiddenFor(x => x.Email)
+                    @Html.HiddenFor(x => x.Phone)
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FirstName, new { @class = "form-label" })
+                    @if (!User.Identity.IsAuthenticated)
+                {
+                        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", disabled = true })
+                    }
+
+                    @Html.ValidationMessageFor(m => m.FirstName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.LastName, new { @class = "form-label" })
+                    @if (!User.Identity.IsAuthenticated)
+                {
+                        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", disabled = true })
+                    }
+                    @Html.ValidationMessageFor(m => m.LastName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Email, new { @class = "form-label" })
+                    @if (!User.Identity.IsAuthenticated)
+                {
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", disabled = true })
+                    }
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Phone, new { @class = "form-label" })
+                    @if (!User.Identity.IsAuthenticated)
+                {
+                        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", disabled = true })
+                    }
+                    @Html.ValidationMessageFor(x => x.Phone)
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><p>Shipping</p></div>
+
+                <div class="panel-body">
+                    @foreach (var address in Model.SavedAddresses)
+                {
+                        <div class="row">
+                            @Html.RadioButtonFor(x => x.ShippingAddressId, address.Id)<address>@address.FirstName @address.LastName<br />@address.StreetAddress<br />@address.Locality, @address.Region @address.PostalCode</address>
+                        </div>
+                    }
+                    <div class="row">
+                        @if (Model.SavedAddresses.Any())
+                {
+                            @Html.RadioButtonFor(x => x.ShippingAddressId, "NewAddress")<span>New Address</span>
+                        }
+                        <div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingFirstName, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingFirstName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingFirstName)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingLastName, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingLastName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingLastName)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingCompany, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingCompany, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingCompany)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingAddressLine1, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingAddressLine1, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingAddressLine1)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingAddressLine2, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingAddressLine2, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingAddressLine2)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingCity, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingCity, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingCity)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingState, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingState, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingState)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ShippingPostalCode, new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.ShippingPostalCode, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ShippingPostalCode)
+                            </div>
+                            <button class="btn btn-default" id="validateShippingAddress">Validate Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><p>Billing</p></div>
+                <div class="panel-body">
+                    @foreach (var creditCard in Model.SavedCards)
+                {
+                        <div class="row">
+                            @Html.RadioButtonFor(x => x.CardToken, creditCard.Token)<img src="@creditCard.ImageUrl" />@creditCard.LastFour
+                        </div>
+                    }
+                    <div class="row">
+                        @if (Model.SavedCards.Any())
+                {
+                            @Html.RadioButtonFor(x => x.CardToken, "NewCard")<span>New Card</span>
+                        }
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.CreditCardNumber, new { @class = "form-label" })
+                                        @Html.TextBoxFor(x => x.CreditCardNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.CreditCardNumber)
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.CreditCardVerificationValue, new { @class = "form-label" })
+                                        @Html.TextBoxFor(x => x.CreditCardVerificationValue, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.CreditCardVerificationValue)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.CreditCardExpirationMonth, new { @class = "form-label" })
+                                @Html.DropDownListFor(x => x.CreditCardExpirationMonth, months, new { @class = "form-control" })
+                                /
+                                @Html.DropDownListFor(x => x.CreditCardExpirationYear, years, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.CreditCardExpirationMonth)
+                                @Html.ValidationMessageFor(x => x.CreditCardExpirationYear)
+                            </div>
+                            @foreach (var address in Model.SavedAddresses)
+                            {
+
+                                @Html.RadioButtonFor(x => x.BillingAddressId, address.Id)<address>@address.FirstName @address.LastName<br />@address.StreetAddress<br />@address.Locality, @address.Region @address.PostalCode</address>
+                            }
+                            @if (Model.SavedAddresses.Any())
+                            {
+                                @Html.RadioButtonFor(x => x.BillingAddressId, "NewAddress")<span>New Address</span>
+                            }
+                            <div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingFirstName, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingFirstName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingFirstName)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingLastName, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingLastName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingLastName)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingCompany, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingCompany, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingCompany)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingAddressLine1, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingAddressLine1, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingAddressLine1)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingAddressLine2, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingAddressLine2, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingAddressLine2)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingCity, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingCity, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingCity)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingState, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingState, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingState)
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.BillingPostalCode, new { @class = "form-label" })
+                                    @Html.TextBoxFor(x => x.BillingPostalCode, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.BillingPostalCode)
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-xs-12">
+            <input type="submit" value="Complete Checkout" class="btn btn-primary" />
+        </div>
+    }
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Address Validation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="well">
+                            <dl class="address">
+                                <dt>@Html.LabelFor(x => x.ShippingAddressLine1)</dt>
+                                <dd class="address1"></dd>
+                                <dt>@Html.LabelFor(x => x.ShippingAddressLine2)</dt>
+                                <dd class="address2"></dd>
+                                <dt>@Html.LabelFor(x => x.ShippingCity)</dt>
+                                <dd class="city"></dd>
+                                <dt>@Html.LabelFor(x => x.ShippingState)</dt>
+                                <dd class="state"></dd>
+                                <dt>@Html.LabelFor(x => x.ShippingPostalCode)</dt>
+                                <dd class="zip"></dd>
+                                <dt>Selected</dt>
+                                <dd><input type="radio" name="shipping" /></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addressSave">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $("#validateShippingAddress").click(function (eventData) {
+            var validateUrl = "/Checkout/ValidateAddress?";
+            if ($("#ShippingPostalCode").val().length > 0) {
+                validateUrl += "postalCode=" + $("#ShippingPostalCode").val() + "&"
+            }
+            if ($("#ShippingState").val().length > 0) {
+                validateUrl += "state=" + $("#ShippingState").val() + "&"
+            }
+            if ($("#ShippingAddressLine1").val().length > 0) {
+                validateUrl += "street1=" + $("#ShippingAddressLine1").val() + "&"
+            }
+
+            if ($("#ShippingAddressLine2").val().length > 0) {
+                validateUrl += "street2=" + $("#ShippingAddressLine2").val() + "&"
+            }
+            if ($("#ShippingCity").val().length > 0) {
+                validateUrl += "city=" + $("#ShippingCity").val() + "&"
+            }
+
+            $.getJSON(validateUrl)
+                .then(function (data, textStatus, jqXHR) {
+                    //if (data.length > 0) {
+                    //    $("#ShippingPostalCode").val(data[0].PostalCode);
+                    //    $("#ShippingState").val(data[0].State);
+                    //    $("#ShippingAddressLine1").val(data[0].Street1);
+                    //    $("#ShippingAddressLine2").val(data[0].Street2);
+                    //    $("#ShippingCity").val(data[0].City);
+                    //}
+
+                    $('.address1').text($("#ShippingAddressLine1").val());
+                    $('.address2').text($("#ShippingAddressLine2").val());
+                    $('.city').text($("#ShippingCity").val());
+                    $('.state').text($("#ShippingState").val());
+                    $('.zip').text($("#ShippingPostalCode").val());
+
+                    var addressTemplate = $('dl.address').parent().parent();
+                    var addressContainer = addressTemplate.parent();
+                    for (var i = 0; i < data.length; i++) {
+                        var clone = addressTemplate.clone();
+                        clone.find('.address1').text(data[i].Street1);
+                        clone.find('.address2').text(data[i].Street2);
+                        clone.find('.city').text(data[i].City);
+                        clone.find('.state').text(data[i].State);
+                        clone.find('.zip').text(data[i].PostalCode);
+
+                        clone.appendTo(addressContainer);
+                    }
+                    $('#myModal').modal('toggle');
+
+                });
+            eventData.preventDefault();
+        });
+
+        $('#addressSave').click(function (event) {
+            var selectedAddress = $('input[name=shipping]:checked').parent().parent();
+            $('#ShippingAddressLine1').val(selectedAddress.children(".address1").text());
+            $('#ShippingAddressLine2').val(selectedAddress.children(".address2").text());
+            $('#ShippingCity').val(selectedAddress.children(".city").text());
+            $('#ShippingState').val(selectedAddress.children(".state").text());
+            $('#ShippingPostalCode').val(selectedAddress.children(".zip").text());
+        });
+    </script>
+}

@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+
+<!-- The LOG IN Modal -->
+<div class="cart">
+
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+            <div>
+
+                <div class="cart-content">
+                    <div class="cart-header">
+                        <h2>Register</h2>
+                    </div>
+                    <div class="cart-body">
+                        <h3>Create an Account</h3>
+
+                        @using (Html.BeginForm())
+            {
+                            @Html.AntiForgeryToken()
+                            if (ViewBag.Error != null)
+                            {
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach (string error in (IEnumerable<string>)ViewBag.Error)
+                                        {
+                                            <li>@error</li>
+                                        }
+                                    </ul>
+
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label for="username" class="control-label">Username</label>
+                                <input name="username" placeholder="username" type="text" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label">Email</label>
+                                <input name="email" placeholder="email" type="email" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label">Password</label>
+                                <input name="password" placeholder="password" type="password" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName" class="control-label">First Name</label>
+                                <input name="firstName" placeholder="first name" type="text" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" class="control-label">Last Name</label>
+                                <input name="lastName" placeholder="last name" type="text" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="control-label">Phone</label>
+                                <input name="phone" placeholder="phone" type="tel" class="form-control" required />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <input type="submit" class="btn btn-primary" value="Register" />
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    @Html.ActionLink("Log On", "LogOn", null, new { @class = "btn btn-default" })
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+    </div>
+        <!-- End of LOG IN Modal content-->

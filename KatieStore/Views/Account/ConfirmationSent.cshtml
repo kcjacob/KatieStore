@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "ConfirmationSent";
+}
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+
+<!-- The LOG IN Modal -->
+<div class="cart">
+
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+            <div>
+
+                <div class="cart-content">
+                    <div class="cart-header">
+                        <h2>Confirmation Sent</h2>
+                    </div>
+                    <div class="cart-body">
+
+                        <div style="padding: 10px; font-size:16px;">We've sent an email to @TempData["EmailAddress"].  Please confirm your account before logging in.</div>
+                        @Html.ActionLink("Go Home", "Index", "Home", null, new { @class = "btn btn primary" })
+
+                    </div>
+
+                </div>
+                </div>
+            </div></div></div>
+                <!-- End of LOG IN Modal content-->

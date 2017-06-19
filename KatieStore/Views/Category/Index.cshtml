@@ -1,0 +1,72 @@
+﻿@using System.Linq.Expressions
+@using KatieStore.Models
+@model Category
+
+@{
+    ViewBag.Title = "Index";
+    List<Category> breadcrumb = new List<Category>();
+
+    var currentCategory = Model;
+    do
+    {
+        breadcrumb.Add(currentCategory);
+        currentCategory = currentCategory.Category2;
+    } while (currentCategory != null);
+    if (!string.IsNullOrEmpty(Model.ID))
+    {
+        breadcrumb.Add(new Category { ID = "" });
+    }
+    breadcrumb.Reverse();
+}
+<!--<div class="row">
+    <div class="col-xs-12">
+        <ol class="breadcrumb">
+            @for (int i = 0; i < breadcrumb.Count; i++)
+            {
+                if (i == breadcrumb.Count - 1)
+                {
+                    <li class="active">@Html.ActionLink((string.IsNullOrEmpty(breadcrumb[i].ID) ? "Home" : breadcrumb[i].ID), "Index", new { ID = breadcrumb[i].ID })</li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink((string.IsNullOrEmpty(breadcrumb[i].ID) ? "Home" : breadcrumb[i].ID), "Index", new { ID = breadcrumb[i].ID })</li>
+                }
+            }
+        </ol>
+    </div>
+    -->
+
+<div class="fullscreen-bg">
+    <img src="~/Content/snow-1209835_1920.jpg">
+</div>
+
+    <div class="">
+        <div class="row">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-xs-12 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">@product.Name</div>
+                        <div class="panel-body">
+                            @if (@product.ProductImages.Any())
+                            {
+                                <img class="img-responsive" src="@product.ProductImages.First().URL" alt="@product.ProductImages.First().AlternateText" />
+                            }
+                            <span>@((product.Price ?? 0).ToString("c"))</span>
+                            <p>@product.Description</p>
+                            @Html.ActionLink("View Product", "Index", "Product",
+            new { id = product.ID },
+            new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+
+
+
+</div>

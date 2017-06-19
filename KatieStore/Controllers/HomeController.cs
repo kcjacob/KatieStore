@@ -3,11 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using KatieStore;
 
 namespace KatieStore.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : System.Web.Mvc.Controller
     {
+        public ActionResult CartCount()
+        {
+            if (Request.Cookies.AllKeys.Contains("cart"))
+            {
+                HttpCookie cartCookie = Request.Cookies["cart"];
+                var cookieValues = cartCookie.Value.Split(',');
+                int quantity = int.Parse(cookieValues[1]);
+                return Json(quantity, JsonRequestBehavior.AllowGet);
+            }
+            return Json(0, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -22,7 +35,7 @@ namespace KatieStore.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Here's some updated text";
 
             return View();
         }
